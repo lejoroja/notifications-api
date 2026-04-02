@@ -9,5 +9,8 @@ export function crearRutasNotificaciones(controlador) {
   enrutador.post('/notificaciones', (req, res, next) =>
     controlador.enviar(req, res, next),
   );
+  enrutador.post('/notificaciones/desde-plantilla', (req, res, next) =>
+    controlador.enviarDesdePlantilla(req, res, next),
+  );
   return enrutador;
 }

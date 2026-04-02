@@ -1,10 +1,16 @@
+import { PlantillaNoEncontradaError } from '../../domain/plantillaCorreo.js';
+
 /**
  * Adaptador de entrada HTTP: traduce la petición al caso de uso y formatea la respuesta.
  */
 export class ControladorNotificaciones {
-  /** @param {import('../../application/enviarNotificacionCasoDeUso.js').EnviarNotificacionCasoDeUso} casoDeUso */
-  constructor(casoDeUso) {
+  /**
+   * @param {import('../../application/enviarNotificacionCasoDeUso.js').EnviarNotificacionCasoDeUso} casoDeUso
+   * @param {import('../../application/enviarNotificacionConPlantillaCasoDeUso.js').EnviarNotificacionConPlantillaCasoDeUso} casoDeUsoPlantilla
+   */
+  constructor(casoDeUso, casoDeUsoPlantilla) {
     this.casoDeUso = casoDeUso;
+    this.casoDeUsoPlantilla = casoDeUsoPlantilla;
   }
 
   /** @type {import('express').RequestHandler} */
@@ -20,6 +26,36 @@ export class ControladorNotificaciones {
       await this.casoDeUso.ejecutar({ destinatario, asunto, cuerpo });
       return res.status(202).json({ mensaje: 'Notificación aceptada para envío.' });
     } catch (err) {
+      next(err);
+    }
+  };
+
+  /** @type {import('express').RequestHandler} */
+  enviarDesdePlantilla = async (req, res, next) => {
+    try {
+      const { destinatario, idPlantilla, variables } = req.body ?? {};
+      if (!destinatario || !idPlantilla) {
+        return res.status(400).json({
+          error: 'Solicitud inválida',
+          detalle: 'Los campos destinatario e idPlantilla son obligatorios.',
+        });
+      }
+      if (variables != null && typeof variables !== 'object') {
+        return res.status(400).json({
+          error: 'Solicitud inválida',
+          detalle: 'El campo variables debe ser un objeto.',
+        });
+      }
+      await this.casoDeUsoPlantilla.ejecutar({
+        destinatario,
+        idPlantilla,
+        variables: variables ?? {},
+      });
+      return res.status(202).json({ mensaje: 'Notificación aceptada para envío (plantilla).' });
+    } catch (err) {
+      if (err instanceof PlantillaNoEncontradaError) {
+        return res.status(404).json({ error: err.message });
+      }
       next(err);
     }
   };

@@ -6,6 +6,24 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y el v
 
 **Fases en Git:** la fase 1 (modular) y la fase 2 (integración) son **dos commits** distintos en `main`. Las etiquetas `v0.1.0` y `v0.2.0` marcan cada entrega; ver [ENTREGAS.md](ENTREGAS.md).
 
+## [0.4.0] - 2026-04-02
+
+### Añadido
+
+- Puerto `PuertoConexionMongo` y adaptadores `AdaptadorMongoSimulado` y `AdaptadorMongoMongoClient` (driver `mongodb`).
+- Selección por entorno: `MONGODB_MOCK` (por defecto simulado) y `MONGODB_URI` cuando `MONGODB_MOCK=false`.
+- Arranque y apagado: `conectar` / `desconectar`; `GET /salud` incluye `mongo.conectado` y `mongo.modo`.
+- Archivo de ejemplo [`.env.example`](.env.example).
+
+## [0.3.0] - 2026-04-02
+
+### Añadido
+
+- Puerto `PuertoPlantillasCorreo` y adaptador `AdaptadorPlantillasEnMemoria` con plantillas de ejemplo (`bienvenida`, `recordatorio`).
+- Casos de uso: listar plantillas, obtener definición con marcadores, enviar notificación renderizando plantilla.
+- Rutas `GET /plantillas-correo`, `GET /plantillas-correo/:id` y `POST /notificaciones/desde-plantilla`.
+- Dominio: `aplicarMarcadores` y error `PlantillaNoEncontradaError`.
+
 ## [0.2.0] - 2026-04-02
 
 ### Añadido
@@ -23,5 +41,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y el v
 - Puerto `PuertoEnvioCorreo` sin proveedor concreto de envío.
 - Caso de uso `EnviarNotificacionCasoDeUso` definido frente al puerto de correo.
 
+[0.4.0]: #v040
+[0.3.0]: #v030
 [0.2.0]: #v020
 [0.1.0]: #v010
