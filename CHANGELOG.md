@@ -4,6 +4,8 @@ Se documentan aquí los cambios notables del proyecto.
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y el versionado [SemVer](https://semver.org/lang/es/).
 
+**Fases en Git:** la fase 1 (modular) y la fase 2 (integración) son **dos commits** distintos en `main`. Las etiquetas `v0.1.0` y `v0.2.0` marcan cada entrega; ver [ENTREGAS.md](ENTREGAS.md).
+
 ## [0.2.0] - 2026-04-02
 
 ### Añadido
