@@ -1,8 +1,13 @@
 import { Router } from 'express';
 
 /**
- * En la primera entrega el enrutador existe sin rutas de negocio (casco modular).
+ * Rutas HTTP de notificaciones enlazadas al controlador (caso de uso ya inyectado).
+ * @param {import('./controladorNotificaciones.js').ControladorNotificaciones} controlador
  */
-export function crearEnrutadorVacio() {
-  return Router();
+export function crearRutasNotificaciones(controlador) {
+  const enrutador = Router();
+  enrutador.post('/notificaciones', (req, res, next) =>
+    controlador.enviar(req, res, next),
+  );
+  return enrutador;
 }
