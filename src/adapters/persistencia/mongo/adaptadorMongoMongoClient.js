@@ -34,8 +34,20 @@ export class AdaptadorMongoMongoClient extends PuertoConexionMongo {
     return this.cliente != null;
   }
 
-  /** Uso interno futuro (repositorios); no expuesto al dominio. */
+  /** @returns {import('mongodb').MongoClient | null} */
   obtenerCliente() {
     return this.cliente;
+  }
+
+  /**
+   * Base de datos con nombre configurable (prototipo / repositorios).
+   * @param {string} [nombreDb]
+   * @returns {import('mongodb').Db}
+   */
+  obtenerBaseDatos(nombreDb = process.env.MONGODB_DB_NAME || 'notifications') {
+    if (!this.cliente) {
+      throw new Error('MongoClient no está conectado');
+    }
+    return this.cliente.db(nombreDb);
   }
 }

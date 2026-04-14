@@ -12,5 +12,8 @@ export function crearRutasNotificaciones(controlador) {
   enrutador.post('/notificaciones/desde-plantilla', (req, res, next) =>
     controlador.enviarDesdePlantilla(req, res, next),
   );
+  enrutador.post('/notificaciones/recordatorio-matricula', (req, res, next) =>
+    controlador.enviarRecordatorioMatricula(req, res, next),
+  );
   return enrutador;
 }

@@ -39,3 +39,19 @@ git checkout entrega-1-modular
 ```
 
 Para volver al proyecto integrado: `git checkout main`.
+
+---
+
+## Prototipo local (Mongo + SMTP + recordatorio de matrícula)
+
+1. Copia [`.env.example`](.env.example) a `.env` y completa **SMTP** y **MAIL_FROM** (remitente verificado en MailerSend). No subas `.env` al repositorio (está en `.gitignore`). Al arrancar, `npm start` carga variables con **dotenv**.
+2. Arranca Mongo local y define `MONGODB_MOCK=false`, `MONGODB_URI` (p. ej. `mongodb://127.0.0.1:27017`) y `MONGODB_DB_NAME=notifications`.
+3. Ejecuta migraciones: `npm run migrate`.
+4. Arranca la API: `npm start`.
+5. **Postman** (o curl): `POST http://localhost:3000/notificaciones/recordatorio-matricula` con cuerpo JSON opcional, por ejemplo:
+
+```json
+{ "nombre": "Johana", "plazo": "esta semana" }
+```
+
+Si omites `destinatario`, se usa el correo sembrado en Mongo (`johannafavorite@gmail.com`) o `DESTINATARIO_RECORDATORIO_MATRICULA` en `.env`.

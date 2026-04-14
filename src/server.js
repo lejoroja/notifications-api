@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { componerAplicacion } from './bootstrap/componerAplicacion.js';
 import { crearConexionMongoPorEntorno } from './bootstrap/crearConexionMongoPorEntorno.js';
 

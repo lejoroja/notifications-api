@@ -21,7 +21,7 @@ export class EnviarNotificacionConPlantillaCasoDeUso {
     if (!destinatario || !idPlantilla) {
       throw new Error('El destinatario y el id de plantilla son obligatorios');
     }
-    const { asunto, cuerpo } = await this.puertoPlantillas.obtenerRenderizado(
+    const { asunto, cuerpo, html } = await this.puertoPlantillas.obtenerRenderizado(
       idPlantilla,
       variables,
     );
@@ -30,6 +30,7 @@ export class EnviarNotificacionConPlantillaCasoDeUso {
       para: notificacion.destinatario,
       asunto: notificacion.asunto,
       texto: notificacion.cuerpo,
+      html,
     });
     return { aceptado: true, idPlantilla };
   }

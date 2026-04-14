@@ -7,10 +7,12 @@ export class ControladorNotificaciones {
   /**
    * @param {import('../../application/enviarNotificacionCasoDeUso.js').EnviarNotificacionCasoDeUso} casoDeUso
    * @param {import('../../application/enviarNotificacionConPlantillaCasoDeUso.js').EnviarNotificacionConPlantillaCasoDeUso} casoDeUsoPlantilla
+   * @param {import('../../application/enviarRecordatorioMatriculaCasoDeUso.js').EnviarRecordatorioMatriculaCasoDeUso} casoRecordatorioMatricula
    */
-  constructor(casoDeUso, casoDeUsoPlantilla) {
+  constructor(casoDeUso, casoDeUsoPlantilla, casoRecordatorioMatricula) {
     this.casoDeUso = casoDeUso;
     this.casoDeUsoPlantilla = casoDeUsoPlantilla;
+    this.casoRecordatorioMatricula = casoRecordatorioMatricula;
   }
 
   /** @type {import('express').RequestHandler} */
@@ -55,6 +57,34 @@ export class ControladorNotificaciones {
     } catch (err) {
       if (err instanceof PlantillaNoEncontradaError) {
         return res.status(404).json({ error: err.message });
+      }
+      next(err);
+    }
+  };
+
+  /**
+   * POST cuerpo opcional: { nombre?, destinatario?, plazo? } — destinatario por defecto desde Mongo migrado o correo de prueba.
+   * @type {import('express').RequestHandler}
+   */
+  enviarRecordatorioMatricula = async (req, res, next) => {
+    try {
+      const { nombre, destinatario, plazo } = req.body ?? {};
+      const resultado = await this.casoRecordatorioMatricula.ejecutar({
+        nombre,
+        destinatario,
+        plazo,
+      });
+      return res.status(202).json({
+        mensaje: 'Recordatorio de matrícula enviado (o encolado según el adaptador de correo).',
+        ...resultado,
+      });
+    } catch (err) {
+      if (err instanceof PlantillaNoEncontradaError) {
+        return res.status(404).json({
+          error: err.message,
+          detalle:
+            'Ejecuta las migraciones Mongo (`npm run migrate`) con MONGODB_MOCK=false o usa plantillas en memoria.',
+        });
       }
       next(err);
     }

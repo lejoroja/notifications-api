@@ -24,4 +24,12 @@ export class PuertoConexionMongo {
   modo() {
     return 'simulado';
   }
+
+  /**
+   * Cliente nativo solo en adaptador Mongo real; por defecto null.
+   * @returns {import('mongodb').MongoClient | null}
+   */
+  obtenerCliente() {
+    return null;
+  }
 }

@@ -7,8 +7,13 @@ import { EnviarNotificacionCasoDeUso } from '../application/enviarNotificacionCa
 import { EnviarNotificacionConPlantillaCasoDeUso } from '../application/enviarNotificacionConPlantillaCasoDeUso.js';
 import { ListarPlantillasCorreoCasoDeUso } from '../application/listarPlantillasCorreoCasoDeUso.js';
 import { ObtenerPlantillaCorreoCasoDeUso } from '../application/obtenerPlantillaCorreoCasoDeUso.js';
-import { AdaptadorCorreoSimulado } from '../adapters/mail/adaptadorCorreoSimulado.js';
 import { AdaptadorPlantillasEnMemoria } from '../adapters/plantillas/adaptadorPlantillasEnMemoria.js';
+import { AdaptadorPlantillasMongo } from '../adapters/plantillas/adaptadorPlantillasMongo.js';
+import { AdaptadorDestinatarioPruebaMongo } from '../adapters/persistencia/mongo/adaptadorDestinatarioPruebaMongo.js';
+import { AdaptadorDestinatarioPruebaNulo } from '../adapters/persistencia/mongo/adaptadorDestinatarioPruebaNulo.js';
+import { crearPuertoCorreoPorEntorno } from './crearPuertoCorreoPorEntorno.js';
+import { obtenerBaseDatosDesdeConexion } from './obtenerBaseDatosDesdeConexion.js';
+import { EnviarRecordatorioMatriculaCasoDeUso } from '../application/enviarRecordatorioMatriculaCasoDeUso.js';
 
 /**
  * @typedef {object} OpcionesComposicion
@@ -20,15 +25,29 @@ import { AdaptadorPlantillasEnMemoria } from '../adapters/plantillas/adaptadorPl
  * @param {OpcionesComposicion} opciones
  */
 export function componerAplicacion({ conexionMongo }) {
-  const puertoCorreo = new AdaptadorCorreoSimulado();
-  const puertoPlantillas = new AdaptadorPlantillasEnMemoria();
+  const baseDatos = obtenerBaseDatosDesdeConexion(conexionMongo);
+  const puertoCorreo = crearPuertoCorreoPorEntorno();
+  const puertoPlantillas = baseDatos
+    ? new AdaptadorPlantillasMongo(baseDatos)
+    : new AdaptadorPlantillasEnMemoria();
+  const puertoDestinatarioPrueba = baseDatos
+    ? new AdaptadorDestinatarioPruebaMongo(baseDatos)
+    : new AdaptadorDestinatarioPruebaNulo();
 
   const casoDeUso = new EnviarNotificacionCasoDeUso(puertoCorreo);
   const casoDeUsoPlantilla = new EnviarNotificacionConPlantillaCasoDeUso(
     puertoPlantillas,
     puertoCorreo,
   );
-  const controlador = new ControladorNotificaciones(casoDeUso, casoDeUsoPlantilla);
+  const casoRecordatorioMatricula = new EnviarRecordatorioMatriculaCasoDeUso(
+    casoDeUsoPlantilla,
+    puertoDestinatarioPrueba,
+  );
+  const controlador = new ControladorNotificaciones(
+    casoDeUso,
+    casoDeUsoPlantilla,
+    casoRecordatorioMatricula,
+  );
 
   const listarPlantillas = new ListarPlantillasCorreoCasoDeUso(puertoPlantillas);
   const obtenerPlantilla = new ObtenerPlantillaCorreoCasoDeUso(puertoPlantillas);

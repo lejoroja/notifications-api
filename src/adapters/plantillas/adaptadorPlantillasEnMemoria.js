@@ -1,7 +1,12 @@
 import { aplicarMarcadores, PlantillaNoEncontradaError } from '../../domain/plantillaCorreo.js';
+import { ID_PLANTILLA_RECORDATORIO_MATRICULA } from '../../constantes/prototipo.js';
+import {
+  CUERPO_HTML_RECORDATORIO,
+  CUERPO_TEXTO_RECORDATORIO,
+} from '../../contenidoPlantillas/recordatorioMatricula.js';
 import { PuertoPlantillasCorreo } from '../../ports/puertoPlantillasCorreo.js';
 
-/** @type {Record<string, { descripcion: string, asuntoMarcadores: string, cuerpoMarcadores: string }>} */
+/** @type {Record<string, { descripcion: string, asuntoMarcadores: string, cuerpoMarcadores: string, cuerpoHtmlMarcadores?: string }>} */
 const PLANTILLAS_PREDETERMINADAS = {
   bienvenida: {
     descripcion: 'Correo de bienvenida al usuario',
@@ -14,6 +19,12 @@ const PLANTILLAS_PREDETERMINADAS = {
     asuntoMarcadores: 'Recordatorio: {{titulo}}',
     cuerpoMarcadores:
       'Hola {{nombre}},\n\nTe recordamos: {{titulo}}.\n{{detalle}}\n\nGracias.',
+  },
+  [ID_PLANTILLA_RECORDATORIO_MATRICULA]: {
+    descripcion: 'Recordatorio de matrícula de materias (prototipo)',
+    asuntoMarcadores: 'Recuerda: debes matricular tus materias, {{nombre}}',
+    cuerpoMarcadores: CUERPO_TEXTO_RECORDATORIO,
+    cuerpoHtmlMarcadores: CUERPO_HTML_RECORDATORIO,
   },
 };
 
@@ -44,6 +55,9 @@ export class AdaptadorPlantillasEnMemoria extends PuertoPlantillasCorreo {
       descripcion: def.descripcion,
       asuntoMarcadores: def.asuntoMarcadores,
       cuerpoMarcadores: def.cuerpoMarcadores,
+      ...(def.cuerpoHtmlMarcadores
+        ? { cuerpoHtmlMarcadores: def.cuerpoHtmlMarcadores }
+        : {}),
     };
   }
 
@@ -54,9 +68,11 @@ export class AdaptadorPlantillasEnMemoria extends PuertoPlantillasCorreo {
   async obtenerRenderizado(id, variables) {
     const def = this._plantillas[id];
     if (!def) throw new PlantillaNoEncontradaError(id);
-    return {
-      asunto: aplicarMarcadores(def.asuntoMarcadores, variables),
-      cuerpo: aplicarMarcadores(def.cuerpoMarcadores, variables),
-    };
+    const asunto = aplicarMarcadores(def.asuntoMarcadores, variables);
+    const cuerpo = aplicarMarcadores(def.cuerpoMarcadores, variables);
+    const html = def.cuerpoHtmlMarcadores
+      ? aplicarMarcadores(def.cuerpoHtmlMarcadores, variables)
+      : undefined;
+    return html ? { asunto, cuerpo, html } : { asunto, cuerpo };
   }
 }

@@ -4,6 +4,7 @@
  * @property {string} para
  * @property {string} asunto
  * @property {string} texto
+ * @property {string} [html] cuerpo HTML (multipart/alternative)
  */
 export class PuertoEnvioCorreo {
   /** @param {MensajeCorreo} _mensaje */

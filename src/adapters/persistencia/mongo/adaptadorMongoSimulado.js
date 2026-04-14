@@ -24,4 +24,9 @@ export class AdaptadorMongoSimulado extends PuertoConexionMongo {
   estaConectado() {
     return this.#conectado;
   }
+
+  /** @returns {null} */
+  obtenerCliente() {
+    return null;
+  }
 }
