@@ -55,3 +55,7 @@ Para volver al proyecto integrado: `git checkout main`.
 ```
 
 Si omites `destinatario`, se usa el correo sembrado en Mongo (`johannafavorite@gmail.com`) o `DESTINATARIO_RECORDATORIO_MATRICULA` en `.env`.
+
+### Pruebas funcionales manuales
+
+Guía y tablas (tipos de prueba, casos, incidencias, análisis): [docs/PRUEBAS_FUNCIONALES.md](docs/PRUEBAS_FUNCIONALES.md). Misma evidencia en Word (imágenes incrustadas): [docs/PRUEBAS_FUNCIONALES.docx](docs/PRUEBAS_FUNCIONALES.docx) (`npm run doc:pruebas` para regenerar).

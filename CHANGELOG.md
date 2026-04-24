@@ -6,6 +6,18 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y el v
 
 **Fases en Git:** la fase 1 (modular) y la fase 2 (integración) son **dos commits** distintos en `main`. Las etiquetas `v0.1.0` y `v0.2.0` marcan cada entrega; ver [ENTREGAS.md](ENTREGAS.md).
 
+## [0.5.3] - 2026-04-15
+
+### Añadido
+
+- Documentación de pruebas funcionales manuales: [docs/PRUEBAS_FUNCIONALES.md](docs/PRUEBAS_FUNCIONALES.md) (tipos de prueba, casos con `curl`, registro de incidencias, análisis de resultados). Enlace desde [ENTREGAS.md](ENTREGAS.md).
+- Evidencia gráfica: PNG en [docs/evidencias/](docs/evidencias/) integrados en [docs/PRUEBAS_FUNCIONALES.md](docs/PRUEBAS_FUNCIONALES.md) (Anexos A–B, un solo documento).
+- Exportación Word con figuras embebidas: [docs/PRUEBAS_FUNCIONALES.docx](docs/PRUEBAS_FUNCIONALES.docx); regeneración: `npm run doc:pruebas` (script `scripts/generar-pruebas-docx.mjs`).
+
+### Cambiado
+
+- [docs/PRUEBAS_FUNCIONALES.md](docs/PRUEBAS_FUNCIONALES.md): ronda ejecutada contra `localhost:3001`, tabla de resultados **OK**, anexo con request/response por caso, nota sobre evidencia y caso 4 alineado con plantilla en Mongo (`recordatorio_matricula`).
+
 ## [0.5.2] - 2026-04-14
 
 ### Corregido
@@ -67,6 +79,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es/1.1.0/) y el v
 - Puerto `PuertoEnvioCorreo` sin proveedor concreto de envío.
 - Caso de uso `EnviarNotificacionCasoDeUso` definido frente al puerto de correo.
 
+[0.5.3]: #v053
 [0.5.2]: #v052
 [0.5.1]: #v051
 [0.5.0]: #v050
